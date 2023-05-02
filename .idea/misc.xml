@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/drawable/botao_customizado_jogar.xml" value="0.1" />
         <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/drawable/botao_customizado_jogar_velha.xml" value="0.1" />
+        <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/layout/activity_game_velha.xml" value="0.4" />
         <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/layout/activity_game_xadrez.xml" value="0.259375" />
         <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/layout/activity_home_velha.xml" value="0.259375" />
         <entry key="..\:/Users/vitto/AndroidStudioProjects/Trabalhojogo/app/src/main/res/layout/activity_home_xadrez.xml" value="0.1896551724137931" />
