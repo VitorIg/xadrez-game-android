@@ -1,5 +1,6 @@
 package com.example.trabalhojogo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -75,9 +76,14 @@ public class GameVelha extends AppCompatActivity implements View.OnClickListener
 
         if (jogador){
             ((Button)view).setText("X");
+            ((Button)view).setTextSize(50);
             jogadas[numBtn] = 1;
+            ((Button)view).setTextColor(Color.RED);
+
         }else {
             ((Button)view).setText("O");
+            ((Button)view).setTextSize(50);
+            ((Button)view).setTextColor(Color.BLUE);
             jogadas[numBtn] = 2;
         }
         if (venceu()){
