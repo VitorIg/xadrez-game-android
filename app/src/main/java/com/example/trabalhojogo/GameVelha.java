@@ -17,6 +17,8 @@ public class GameVelha extends AppCompatActivity implements View.OnClickListener
     //   private ImageView botaoCentro;
     private Button []btn = new Button[9];
     private Button resetGame;
+
+    private Button buttonFalar;
     private TextView placarPrimeiroJogador, placarSegundoJogador;
     private boolean jogador;
 
@@ -40,6 +42,8 @@ public class GameVelha extends AppCompatActivity implements View.OnClickListener
         resetGame = findViewById(R.id.resetGame);
 
 
+
+
         for (int i = 0; i < btn.length; i++) {
             int resId = getResources().getIdentifier("btn_"+i, "id", getPackageName());
             btn[i] = findViewById(resId);
@@ -59,6 +63,14 @@ public class GameVelha extends AppCompatActivity implements View.OnClickListener
                 resetGame();
 
 
+            }
+        });
+
+        Button myButton = findViewById(R.id.buttonFalar);
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(GameVelha.this, "Botão clicado", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -129,4 +141,6 @@ public class GameVelha extends AppCompatActivity implements View.OnClickListener
 
         return  resuldado;
     }
+
+
 }
