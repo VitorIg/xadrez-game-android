@@ -1,31 +1,23 @@
-
-
 package com.example.trabalhojogo;
 
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.LinearLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
-
-        import androidx.appcompat.app.AppCompatActivity;
-
-        import com.example.trabalhojogo.Pieces.Bishop;
-        import com.example.trabalhojogo.Pieces.King;
-        import com.example.trabalhojogo.Pieces.Knight;
-        import com.example.trabalhojogo.Pieces.Pawn;
-        import com.example.trabalhojogo.Pieces.Piece;
-        import com.example.trabalhojogo.Pieces.Queen;
-        import com.example.trabalhojogo.Pieces.Rook;
-        import java.util.ArrayList;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.trabalhojogo.Pieces.Bishop;
+import com.example.trabalhojogo.Pieces.King;
+import com.example.trabalhojogo.Pieces.Knight;
+import com.example.trabalhojogo.Pieces.Pawn;
+import com.example.trabalhojogo.Pieces.Piece;
+import com.example.trabalhojogo.Pieces.Queen;
+import com.example.trabalhojogo.Pieces.Rook;
+import java.util.ArrayList;
 
 public class GameXadrez extends AppCompatActivity implements View.OnClickListener {
-
-//    private void showPawnChoices() {
-//        pawn_choices.setVisibility(View.VISIBLE);
-//    }
 
 
     public Boolean FirstPlayerTurn;
@@ -45,16 +37,12 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
     Piece bKing,bQueen,bKnight1,bKnight2,bRook1,bRook2,bBishop1,bBishop2,bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8;
     Piece wKing,wQueen,wKnight1,wKnight2,wRook1,wRook2,wBishop1,wBishop2,wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeStatusBarTransparent();
         setContentView(R.layout.activity_game_xadrez);
         initializeBoard();
-
-
 
         Button btnReset = findViewById(R.id.btnReset);
         btnReset.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +52,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             }
         });
     }
-
 
     private void makeStatusBarTransparent() {
         if (Build.VERSION.SDK_INT >= 21) {
@@ -111,7 +98,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         wPawn6 = new Pawn(true);
         wPawn7 = new Pawn(true);
         wPawn8 = new Pawn(true);
-
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -182,6 +168,15 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         AnythingSelected = false;
         FirstPlayerTurn = true;
         setBoard();
+        deselectPiece();
+    }
+
+    private void deselectPiece() {
+        AnythingSelected = false;
+        if (lastPos != null) {
+            DisplayBoardBackground[lastPos.getX()][lastPos.getY()].setBackgroundResource(calculateBoardColorResource(lastPos.getX(), lastPos.getY()));
+        // usada para desmarcar a peça quando celecionada
+        }
     }
 
     private void setBoard() {
@@ -221,8 +216,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
     }
 
 ////////////////////////////////////////////////////
-
-
 
     @Override
     public void onClick(View v) {
