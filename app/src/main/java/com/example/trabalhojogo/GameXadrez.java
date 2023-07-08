@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
     public class GameXadrez extends AppCompatActivity implements View.OnClickListener {
 
-
         public Boolean FirstPlayerTurn;
         public ArrayList<Coordinates> listOfCoordinates = new ArrayList<>();
         public Position[][] Board = new Position[8][8];
