@@ -6,6 +6,8 @@
     tools:context=".GameXadrez">
 
 
+    <include
+        layout="@layout/activity_botao_falar" />
 
     <GridLayout
         android:layout_width="wrap_content"
