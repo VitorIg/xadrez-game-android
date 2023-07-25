@@ -19,7 +19,7 @@ public class HomeXadrez extends AppCompatActivity {
         findViewById(R.id.buttonHomeVelha).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HomeVelha.class));
+                startActivity(new Intent(getApplicationContext(), GameXadrez.class));
                 overridePendingTransition(R.anim.slide_xadrez_velha, R.anim.slide_velha_xadrez);
             }
         });

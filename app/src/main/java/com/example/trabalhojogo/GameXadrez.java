@@ -488,21 +488,18 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         if (!AnythingSelected) {
             Piece clickedPiece = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece();
             if (clickedPiece == null) {
-                isKingInDanger();
+                //       isKingInDanger();
                 return;
             } else if (clickedPiece.isWhite() != FirstPlayerTurn) {
-                isKingInDanger();
+                //      isKingInDanger();
                 return;
             } else {
                 listOfCoordinates.clear();
-                listOfCoordinates = clickedPiece.AllowedMoves(clickedPosition, Board);
+                listOfCoordinates = clickedPiece.getAllowedMoves(clickedPosition, Board);
                 DisplayBoardBackground[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.color.colorSelected);
-                setColorAtAllowedPosition(listOfCoordinates);
                 AnythingSelected = true;
             }
         }
-
-
 
         else {
             if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() == null){
@@ -517,17 +514,13 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                     Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(Board[lastPos.getX()][lastPos.getY()].getPiece());
                     Board[lastPos.getX()][lastPos.getY()].setPiece(null);
 
-                    isKingInDanger();
-                    resetColorAtAllowedPosition(listOfCoordinates);
                     DisplayBoard[lastPos.getX()][lastPos.getY()].setBackgroundResource(0);
                     resetColorAtLastPosition(lastPos);
                     AnythingSelected = false;
                     FirstPlayerTurn = !FirstPlayerTurn;
-                    checkForPawn();
 
                 }else{
                     resetColorAtLastPosition(lastPos);
-                    resetColorAtAllowedPosition(listOfCoordinates);
                     AnythingSelected = false;
                 }
 
@@ -541,46 +534,33 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                         if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
                             if(moveIsAllowed(listOfCoordinates , clickedPosition)){
 
-                                // Importe a classe Toast
-
                                 if (Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() instanceof King) {
 
                                     // Verifica se o rei foi morto
                                     if (Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn) {
                                         // Exibe o toast de "game over"
                                         Toast.makeText(getApplicationContext(), "Game Over - Rei foi morto!", Toast.LENGTH_SHORT).show();
-                                        // Reinicia o jogo
-                                       // initializeBoard();
-
                                     }
                                 }
 
                                 Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(Board[lastPos.getX()][lastPos.getY()].getPiece());
                                 Board[lastPos.getX()][lastPos.getY()].setPiece(null);
 
-                                resetColorAtAllowedPosition(listOfCoordinates);
                                 DisplayBoard[lastPos.getX()][lastPos.getY()].setBackgroundResource(0);
                                 resetColorAtLastPosition(lastPos);
 
                                 AnythingSelected = false;
                                 FirstPlayerTurn = !FirstPlayerTurn;
-                               checkForPawn();
                             }else{
                                 resetColorAtLastPosition(lastPos);
-                                resetColorAtAllowedPosition(listOfCoordinates);
                                 AnythingSelected = false;
                             }
 
                         }else{
-
-
                             resetColorAtLastPosition(lastPos);
-                            resetColorAtAllowedPosition(listOfCoordinates);
-
                             listOfCoordinates.clear();
-                            listOfCoordinates = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().AllowedMoves(clickedPosition, Board);
+                            listOfCoordinates = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().getAllowedMoves(clickedPosition, Board);
                             DisplayBoardBackground[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.color.colorSelected);
-                            setColorAtAllowedPosition(listOfCoordinates);
                             AnythingSelected = true;
                         }
                     }
@@ -592,8 +572,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         lastPos = new Coordinates(clickedPosition.getX(), clickedPosition.getY());
         setBoard();
     }
-
-
     public void saveBoard(){
         numberOfMoves++;
         LastMoves.add(numberOfMoves-1 ,Board2 );
@@ -612,42 +590,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                     LastMoves.get(numberOfMoves-1)[g][h].setPiece(Board[g][h].getPiece());
                 }
             }
-        }
-    }
-
-
-    public void undo(View v) {
-        if (numberOfMoves > 0) {
-            Position[][] lastMove = LastMoves.get(numberOfMoves - 1);
-
-            for (int row = 0; row < 8; row++) {
-                for (int col = 0; col < 8; col++) {
-                    Piece piece = lastMove[row][col].getPiece();
-                    Board[row][col].setPiece(piece);
-                }
-            }
-
-            numberOfMoves--;
-
-            setBoard();
-            resetColorAtAllowedPosition( listOfCoordinates);
-            isKingInDanger();
-        }
-    }
-
-
-
-    private void resetColorAtAllowedPosition(ArrayList<Coordinates> listOfCoordinates) {
-        for (Coordinates coordinate : listOfCoordinates) {
-            int boardColorResource = calculateBoardColorResource(coordinate.getX(), coordinate.getY());
-            DisplayBoardBackground[coordinate.getX()][coordinate.getY()].setBackgroundResource(boardColorResource);
-        }
-    }
-
-    private void setColorAtAllowedPosition(ArrayList<Coordinates> list) {
-        for (Coordinates coordinate : list) {
-            int targetColorResource = determineTargetColorResource(coordinate);
-            DisplayBoardBackground[coordinate.getX()][coordinate.getY()].setBackgroundResource(targetColorResource);
         }
     }
 
@@ -685,7 +627,7 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                 Piece piece = Board[i][j].getPiece();
                 if (piece != null) {
                     Coordinates coordinates = new Coordinates(i, j);
-                    ArrayList<Coordinates> allowedMoves = piece.AllowedMoves(coordinates, Board);
+                    ArrayList<Coordinates> allowedMoves = piece.getAllowedMoves(coordinates, Board);
                     for (Coordinates move : allowedMoves) {
                         Piece targetPiece = Board[move.getX()][move.getY()].getPiece();
                         if (targetPiece instanceof King) {
@@ -705,21 +647,5 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             DisplayBoardBackground[kingPosition.getX()][kingPosition.getY()].setBackgroundResource(kingColorResource);
         }
     }
-    private void checkForPawn() {
-        Piece clickedPiece = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece();
-        if (clickedPiece instanceof Pawn) {
-            if (clickedPiece.isWhite() && clickedPosition.getY() == 0) {
-               showPawnChoices();
-            } else if (!clickedPiece.isWhite() && clickedPosition.getY() == 7) {
-                      showPawnChoices();
-                pawn_choices.setRotation(180);
-            }
-        }
-         isKingInDanger();
-    }
-
-    private void showPawnChoices() {
-    }
-
 }
 
