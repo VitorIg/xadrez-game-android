@@ -2,12 +2,31 @@ package com.example.trabalhojogo;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.SpeechRecognizer;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.trabalhojogo.Pieces.Bishop;
 import com.example.trabalhojogo.Pieces.King;
 import com.example.trabalhojogo.Pieces.Knight;
@@ -18,7 +37,6 @@ import com.example.trabalhojogo.Pieces.Rook;
 import java.util.ArrayList;
 
 public class GameXadrez extends AppCompatActivity implements View.OnClickListener {
-
 
     public Boolean FirstPlayerTurn;
     public ArrayList<Coordinates> listOfCoordinates = new ArrayList<>();
@@ -31,8 +49,18 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
     public TextView[][] DisplayBoard = new TextView[8][8];
     public TextView[][] DisplayBoardBackground = new TextView[8][8];
     public ArrayList<Position[][]> LastMoves = new ArrayList<>();
+
     public LinearLayout pawn_choices;
     public int numberOfMoves;
+
+    private SpeechRecognizer speechRecognizer;
+    private EditText editText;
+    private ImageView buttonMicrofone;
+    private static final int RecordAudioRequestCode = 1;
+
+    private HashMap<String, View> voiceCommandsMap = new HashMap<>();
+
+
 
     Piece bKing,bQueen,bKnight1,bKnight2,bRook1,bRook2,bBishop1,bBishop2,bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8;
     Piece wKing,wQueen,wKnight1,wKnight2,wRook1,wRook2,wBishop1,wBishop2,wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8;
@@ -51,12 +79,127 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                 initializeBoard();
             }
         });
+
+        editText = findViewById(R.id.textofalado);
+        buttonMicrofone = findViewById(R.id.buttonMic);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        );
+        speechRecognizerIntent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.getDefault()
+        );
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+                editText.setText("");
+                editText.setHint("Escutando...");
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+            }
+
+            @Override
+            public void onError(int error) {
+            }
+
+//            @Override
+//            public void onResults(Bundle results) {
+//                buttonMicrofone.setImageResource(R.drawable.mic_off);
+//                ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                if (data != null && !data.isEmpty()) {
+//                    String spokenText = data.get(0);
+//                    // Aqui você pode processar o texto reconhecido, como verificar os comandos de voz e executar ações
+//                    Toast.makeText(GameXadrez.this, "Texto Reconhecido: " + spokenText, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+
+            @Override
+            public void onResults(Bundle results) {
+                buttonMicrofone.setImageResource(R.drawable.mic_off);
+                ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (data != null && !data.isEmpty()) {
+                    String spokenText = data.get(0).toLowerCase();
+                    Toast.makeText(GameXadrez.this, "Texto Reconhecido: " + spokenText, Toast.LENGTH_SHORT).show();
+
+                    View buttonToClick = voiceCommandsMap.get(spokenText);
+
+                    if (buttonToClick != null) {
+                        // Clique no botão associado ao comando de voz
+                        buttonToClick.performClick();
+                    } else {
+                        // Comando de voz não reconhecido
+                        Toast.makeText(GameXadrez.this, "Comando de voz não reconhecido", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+            }
+        });
+
+        buttonMicrofone.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    speechRecognizer.stopListening();
+                }
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    buttonMicrofone.setImageResource(R.drawable.mic_on);
+                    if (ContextCompat.checkSelfPermission(GameXadrez.this, Manifest.permission.RECORD_AUDIO)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        checkPermissions();
+                    } else {
+                        speechRecognizer.startListening(speechRecognizerIntent);
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    RecordAudioRequestCode
+            );
+        }
     }
 
     private void makeStatusBarTransparent() {
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                RecordAudioRequestCode
+        );
     }
     private void initializeBoard() {
 
@@ -169,7 +312,25 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         FirstPlayerTurn = true;
         setBoard();
         deselectPiece();
+
+
+        ////////////////////////////////////////////////////// click por voz
+
+        Button btnA = findViewById(R.id.btnReset);
+//        Button btnB = findViewById(R.id.btnB);
+//        Button btnC = findViewById(R.id.btnC);
+
+        voiceCommandsMap.put("resetar", btnA);
+        voiceCommandsMap.put("clique no botão a", btnA);
+
+//        voiceCommandsMap.put("botão b", btnB);
+//        voiceCommandsMap.put("clique no botão b", btnB);
+//
+//        voiceCommandsMap.put("botão c", btnC);
+//        voiceCommandsMap.put("clique no botão c", btnC);
     }
+
+///////////
 
     private void deselectPiece() {
         AnythingSelected = false;
@@ -647,5 +808,7 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             DisplayBoardBackground[kingPosition.getX()][kingPosition.getY()].setBackgroundResource(kingColorResource);
         }
     }
+
+
 }
 
