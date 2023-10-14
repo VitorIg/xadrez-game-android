@@ -2,6 +2,7 @@ package com.example.trabalhojogo;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.SpeechRecognizer;
 
 import android.Manifest;
@@ -9,10 +10,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,7 +38,8 @@ import com.example.trabalhojogo.Pieces.Pawn;
 import com.example.trabalhojogo.Pieces.Piece;
 import com.example.trabalhojogo.Pieces.Queen;
 import com.example.trabalhojogo.Pieces.Rook;
-import java.util.ArrayList;
+
+
 
 public class GameXadrez extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,8 +65,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
 
     private HashMap<String, View> voiceCommandsMap = new HashMap<>();
 
-
-
     Piece bKing,bQueen,bKnight1,bKnight2,bRook1,bRook2,bBishop1,bBishop2,bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8;
     Piece wKing,wQueen,wKnight1,wKnight2,wRook1,wRook2,wBishop1,wBishop2,wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8;
 
@@ -71,8 +74,10 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         makeStatusBarTransparent();
         setContentView(R.layout.activity_game_xadrez);
         initializeBoard();
+        calculateCellSize();
 
         Button btnReset = findViewById(R.id.btnReset);
+
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,14 +149,13 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                     if (buttonToClick != null) {
                         // Clique no botão associado ao comando de voz
                         buttonToClick.performClick();
+
                     } else {
                         // Comando de voz não reconhecido
                         Toast.makeText(GameXadrez.this, "Comando de voz não reconhecido", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-
-
             @Override
             public void onPartialResults(Bundle partialResults) {
             }
@@ -166,6 +170,7 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     speechRecognizer.stopListening();
+
                 }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     buttonMicrofone.setImageResource(R.drawable.mic_on);
@@ -179,6 +184,45 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                 return false;
             }
         });
+
+    }
+    private void calculateCellSize() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int screenWidth = displayMetrics.widthPixels;
+        int numColumns = 8; // Número de colunas do tabuleiro
+
+        int cellSize = screenWidth / numColumns;
+
+        GridLayout gridLayout2 = findViewById(R.id.gridLayout2);
+        GridLayout gridLayout = findViewById(R.id.gridLayout);
+        LinearLayout LinearLayout = findViewById(R.id.layoutLetras);
+
+        for (int i = 0; i < gridLayout2.getChildCount(); i++) {
+            TextView cell = (TextView) gridLayout2.getChildAt(i);
+            ViewGroup.LayoutParams params = cell.getLayoutParams();
+            params.width = cellSize;
+            params.height = cellSize;
+            cell.setLayoutParams(params);
+        }
+
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            TextView cell = (TextView) gridLayout.getChildAt(i);
+            ViewGroup.LayoutParams params = cell.getLayoutParams();
+            params.width = cellSize;
+            params.height = cellSize;
+            cell.setLayoutParams(params);
+        }
+
+        for (int i = 0; i < LinearLayout.getChildCount(); i++) {
+            TextView cell = (TextView) LinearLayout.getChildAt(i);
+            ViewGroup.LayoutParams params = cell.getLayoutParams();
+            params.width = cellSize;
+            params.height = cellSize;
+            cell.setLayoutParams(params);
+        }
+
     }
 
     private void checkPermissions() {
@@ -316,18 +360,470 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
 
         ////////////////////////////////////////////////////// click por voz
 
-        Button btnA = findViewById(R.id.btnReset);
-//        Button btnB = findViewById(R.id.btnB);
-//        Button btnC = findViewById(R.id.btnC);
+        Button btn1 = findViewById(R.id.btnReset);
+        TextView A1 = findViewById(R.id.R07);
+        TextView A2 = findViewById(R.id.R06);
+        TextView A3 = findViewById(R.id.R05);
+        TextView A4 = findViewById(R.id.R04);
+        TextView A5 = findViewById(R.id.R03);
+        TextView A6 = findViewById(R.id.R02);
+        TextView A7 = findViewById(R.id.R01);
+        TextView A8 = findViewById(R.id.R00);
 
-        voiceCommandsMap.put("resetar", btnA);
-        voiceCommandsMap.put("clique no botão a", btnA);
+        TextView B1 = findViewById(R.id.R17);
+        TextView B2 = findViewById(R.id.R16);
+        TextView B3 = findViewById(R.id.R15);
+        TextView B4 = findViewById(R.id.R14);
+        TextView B5 = findViewById(R.id.R13);
+        TextView B6 = findViewById(R.id.R12);
+        TextView B7 = findViewById(R.id.R11);
+        TextView B8 = findViewById(R.id.R10);
 
-//        voiceCommandsMap.put("botão b", btnB);
-//        voiceCommandsMap.put("clique no botão b", btnB);
-//
-//        voiceCommandsMap.put("botão c", btnC);
-//        voiceCommandsMap.put("clique no botão c", btnC);
+        TextView C1 = findViewById(R.id.R27);
+        TextView C2 = findViewById(R.id.R26);
+        TextView C3 = findViewById(R.id.R25);
+        TextView C4 = findViewById(R.id.R24);
+        TextView C5 = findViewById(R.id.R23);
+        TextView C6 = findViewById(R.id.R22);
+        TextView C7 = findViewById(R.id.R21);
+        TextView C8 = findViewById(R.id.R20);
+
+        TextView D1 = findViewById(R.id.R37);
+        TextView D2 = findViewById(R.id.R36);
+        TextView D3 = findViewById(R.id.R35);
+        TextView D4 = findViewById(R.id.R34);
+        TextView D5 = findViewById(R.id.R33);
+        TextView D6 = findViewById(R.id.R32);
+        TextView D7 = findViewById(R.id.R31);
+        TextView D8 = findViewById(R.id.R30);
+
+        TextView E1 = findViewById(R.id.R47);
+        TextView E2 = findViewById(R.id.R46);
+        TextView E3 = findViewById(R.id.R45);
+        TextView E4 = findViewById(R.id.R44);
+        TextView E5 = findViewById(R.id.R43);
+        TextView E6 = findViewById(R.id.R42);
+        TextView E7 = findViewById(R.id.R41);
+        TextView E8 = findViewById(R.id.R40);
+
+        TextView F1 = findViewById(R.id.R57);
+        TextView F2 = findViewById(R.id.R56);
+        TextView F3 = findViewById(R.id.R55);
+        TextView F4 = findViewById(R.id.R54);
+        TextView F5 = findViewById(R.id.R53);
+        TextView F6 = findViewById(R.id.R52);
+        TextView F7 = findViewById(R.id.R51);
+        TextView F8 = findViewById(R.id.R50);
+
+        TextView G1 = findViewById(R.id.R67);
+        TextView G2 = findViewById(R.id.R66);
+        TextView G3 = findViewById(R.id.R65);
+        TextView G4 = findViewById(R.id.R64);
+        TextView G5 = findViewById(R.id.R63);
+        TextView G6 = findViewById(R.id.R62);
+        TextView G7 = findViewById(R.id.R61);
+        TextView G8 = findViewById(R.id.R60);
+
+        TextView H1 = findViewById(R.id.R77);
+        TextView H2 = findViewById(R.id.R76);
+        TextView H3 = findViewById(R.id.R75);
+        TextView H4 = findViewById(R.id.R74);
+        TextView H5 = findViewById(R.id.R73);
+        TextView H6 = findViewById(R.id.R72);
+        TextView H7 = findViewById(R.id.R71);
+        TextView H8 = findViewById(R.id.R70);
+
+
+        voiceCommandsMap.put("resetar", btn1);
+        voiceCommandsMap.put("clique no botão a", btn1);
+
+        voiceCommandsMap.put("a um", A1);
+        voiceCommandsMap.put("a1", A1);
+        voiceCommandsMap.put("A1", A1);
+        voiceCommandsMap.put("A 1", A1);
+
+        voiceCommandsMap.put("a dois", A2);
+        voiceCommandsMap.put("a2", A2);
+        voiceCommandsMap.put("A2", A2);
+        voiceCommandsMap.put("A 2", A2);
+
+        voiceCommandsMap.put("a 3", A3);
+        voiceCommandsMap.put("a3", A3);
+        voiceCommandsMap.put("A3", A3);
+        voiceCommandsMap.put("atriz", A3);
+
+        voiceCommandsMap.put("a 4", A4);
+        voiceCommandsMap.put("a4", A4);
+        voiceCommandsMap.put("A4", A4);
+        voiceCommandsMap.put("a quatro", A4);
+
+        voiceCommandsMap.put("a 5", A5);
+        voiceCommandsMap.put("A 5", A5);
+        voiceCommandsMap.put("a5", A5);
+        voiceCommandsMap.put("A5", A5);
+        voiceCommandsMap.put("a cinco", A5);
+
+        voiceCommandsMap.put("a 6", A6);
+        voiceCommandsMap.put("A 6", A6);
+        voiceCommandsMap.put("a6", A6);
+        voiceCommandsMap.put("A6", A6);
+        voiceCommandsMap.put("a seis", A6);
+        voiceCommandsMap.put("Assis ", A6);
+
+        voiceCommandsMap.put("a 7", A7);
+        voiceCommandsMap.put("A 7", A7);
+        voiceCommandsMap.put("a7", A7);
+        voiceCommandsMap.put("A7", A7);
+        voiceCommandsMap.put("a sete", A7);
+
+        voiceCommandsMap.put("a 8", A8);
+        voiceCommandsMap.put("A 8", A8);
+        voiceCommandsMap.put("a8", A8);
+        voiceCommandsMap.put("A8", A8);
+        voiceCommandsMap.put("a oito", A8);
+
+        voiceCommandsMap.put("B 1", B1);
+        voiceCommandsMap.put("b 1", B1);
+        voiceCommandsMap.put("b1", B1);
+        voiceCommandsMap.put("B1", B1);
+
+        voiceCommandsMap.put("b 2", B2);
+        voiceCommandsMap.put("B 2", B2);
+        voiceCommandsMap.put("b2", B2);
+        voiceCommandsMap.put("B2", B2);
+        voiceCommandsMap.put("b dois", B2);
+
+        voiceCommandsMap.put("b 3", B3);
+        voiceCommandsMap.put("B 3", B3);
+        voiceCommandsMap.put("b3", B3);
+        voiceCommandsMap.put("B3", B3);
+        voiceCommandsMap.put("b três", B3);
+
+        voiceCommandsMap.put("b 4", B4);
+        voiceCommandsMap.put("B 4", B4);
+        voiceCommandsMap.put("b4", B4);
+        voiceCommandsMap.put("B4", B4);
+        voiceCommandsMap.put("b quatro", B4);
+
+        voiceCommandsMap.put("b 4", B4);
+        voiceCommandsMap.put("B 4", B4);
+        voiceCommandsMap.put("b4", B4);
+        voiceCommandsMap.put("B4", B4);
+        voiceCommandsMap.put("b quatro", B4);
+
+        voiceCommandsMap.put("b 5", B5);
+        voiceCommandsMap.put("B 5", B5);
+        voiceCommandsMap.put("b5", B5);
+        voiceCommandsMap.put("B5", B5);
+        voiceCommandsMap.put("b cinco", B5);
+
+        voiceCommandsMap.put("b 6", B6);
+        voiceCommandsMap.put("B 6", B6);
+        voiceCommandsMap.put("b6", B6);
+        voiceCommandsMap.put("B6", B6);
+        voiceCommandsMap.put("b seis", B6);
+
+        voiceCommandsMap.put("b 7", B7);
+        voiceCommandsMap.put("B 7", B7);
+        voiceCommandsMap.put("b7", B7);
+        voiceCommandsMap.put("B7", B7);
+        voiceCommandsMap.put("b sete", B7);
+
+        voiceCommandsMap.put("b 8", B8);
+        voiceCommandsMap.put("B 8", B8);
+        voiceCommandsMap.put("b8", B8);
+        voiceCommandsMap.put("B8", B8);
+        voiceCommandsMap.put("b oito", B8);
+
+        voiceCommandsMap.put("c 1", C1);
+        voiceCommandsMap.put("C 1", C1);
+        voiceCommandsMap.put("c1", C1);
+        voiceCommandsMap.put("C1", C1);
+        voiceCommandsMap.put("c um", C1);
+
+        voiceCommandsMap.put("c 2", C2);
+        voiceCommandsMap.put("C 2", C2);
+        voiceCommandsMap.put("c2", C2);
+        voiceCommandsMap.put("c2", C2);
+        voiceCommandsMap.put("c dois", C2);
+
+        voiceCommandsMap.put("c 3", C3);
+        voiceCommandsMap.put("C 3", C3);
+        voiceCommandsMap.put("c3", C3);
+        voiceCommandsMap.put("C3", C3);
+        voiceCommandsMap.put("c três", C3);
+
+        voiceCommandsMap.put("c 4", C4);
+        voiceCommandsMap.put("C 4", C4);
+        voiceCommandsMap.put("c4", C4);
+        voiceCommandsMap.put("C4", C4);
+        voiceCommandsMap.put("c quatro", C4);
+
+        voiceCommandsMap.put("c 5", C5);
+        voiceCommandsMap.put("C 5", C5);
+        voiceCommandsMap.put("c5", C5);
+        voiceCommandsMap.put("C5", C5);
+        voiceCommandsMap.put("c cinco", C5);
+
+        voiceCommandsMap.put("c 6", C6);
+        voiceCommandsMap.put("C 6", C6);
+        voiceCommandsMap.put("c6", C6);
+        voiceCommandsMap.put("C6", C6);
+        voiceCommandsMap.put("c seis", C6);
+
+        voiceCommandsMap.put("c 7", C7);
+        voiceCommandsMap.put("C 7", C7);
+        voiceCommandsMap.put("c7", C7);
+        voiceCommandsMap.put("C7", C7);
+        voiceCommandsMap.put("c sete", C7);
+
+        voiceCommandsMap.put("c 8", C8);
+        voiceCommandsMap.put("C 8", C8);
+        voiceCommandsMap.put("c8", C8);
+        voiceCommandsMap.put("C8", C8);
+        voiceCommandsMap.put("c oito", C8);
+
+        voiceCommandsMap.put("d 1", D1);
+        voiceCommandsMap.put("D 1", D1);
+        voiceCommandsMap.put("d1", D1);
+        voiceCommandsMap.put("D1", D1);
+        voiceCommandsMap.put("de um", D1);
+
+        voiceCommandsMap.put("d 2", D2);
+        voiceCommandsMap.put("D 2", D2);
+        voiceCommandsMap.put("d2", D2);
+        voiceCommandsMap.put("D2", D2);
+        voiceCommandsMap.put("de dois", D2);
+
+        voiceCommandsMap.put("d 3", D3);
+        voiceCommandsMap.put("D 3", D3);
+        voiceCommandsMap.put("d3", D3);
+        voiceCommandsMap.put("D3", D3);
+        voiceCommandsMap.put("de três", D3);
+
+        voiceCommandsMap.put("d 4", D4);
+        voiceCommandsMap.put("D 4", D4);
+        voiceCommandsMap.put("d4", D4);
+        voiceCommandsMap.put("D4", D4);
+        voiceCommandsMap.put("de quatro", D4);
+
+        voiceCommandsMap.put("d 5", D5);
+        voiceCommandsMap.put("D 5", D5);
+        voiceCommandsMap.put("d5", D5);
+        voiceCommandsMap.put("D5", D5);
+        voiceCommandsMap.put("de cinco", D5);
+
+        voiceCommandsMap.put("d 6", D6);
+        voiceCommandsMap.put("D 6", D6);
+        voiceCommandsMap.put("d6", D6);
+        voiceCommandsMap.put("D6", D6);
+        voiceCommandsMap.put("de seis", D6);
+
+        voiceCommandsMap.put("d 7", D7);
+        voiceCommandsMap.put("D 7", D7);
+        voiceCommandsMap.put("d7", D7);
+        voiceCommandsMap.put("D7", D7);
+        voiceCommandsMap.put("de sete", D7);
+
+        voiceCommandsMap.put("d 8", D8);
+        voiceCommandsMap.put("D 8", D8);
+        voiceCommandsMap.put("d8", D8);
+        voiceCommandsMap.put("D8", D8);
+        voiceCommandsMap.put("de oito", D8);
+
+        voiceCommandsMap.put("e 1", E1);
+        voiceCommandsMap.put("E 1", E1);
+        voiceCommandsMap.put("e1", E1);
+        voiceCommandsMap.put("E1", E1);
+        voiceCommandsMap.put("e um", E1);
+
+        voiceCommandsMap.put("e 2", E2);
+        voiceCommandsMap.put("E 2", E2);
+        voiceCommandsMap.put("e2", E2);
+        voiceCommandsMap.put("E2", E2);
+        voiceCommandsMap.put("e dois", E2);
+
+        voiceCommandsMap.put("e 3", E3);
+        voiceCommandsMap.put("E 3", E3);
+        voiceCommandsMap.put("e3", E3);
+        voiceCommandsMap.put("E3", E3);
+        voiceCommandsMap.put("e três", E3);
+
+        voiceCommandsMap.put("e 4", E4);
+        voiceCommandsMap.put("E 4", E4);
+        voiceCommandsMap.put("e4", E4);
+        voiceCommandsMap.put("E4", E4);
+        voiceCommandsMap.put("e quatro", E4);
+
+        voiceCommandsMap.put("e 5", E5);
+        voiceCommandsMap.put("E 5", E5);
+        voiceCommandsMap.put("e5", E5);
+        voiceCommandsMap.put("E5", E5);
+        voiceCommandsMap.put("e cinco", E5);
+
+        voiceCommandsMap.put("e 6", E6);
+        voiceCommandsMap.put("E 6", E6);
+        voiceCommandsMap.put("e6", E6);
+        voiceCommandsMap.put("E6", E6);
+        voiceCommandsMap.put("e seis", E6);
+
+        voiceCommandsMap.put("e 7", E7);
+        voiceCommandsMap.put("E 7", E7);
+        voiceCommandsMap.put("e7", E7);
+        voiceCommandsMap.put("E7", E7);
+        voiceCommandsMap.put("e sete", E7);
+
+        voiceCommandsMap.put("e 8", E8);
+        voiceCommandsMap.put("E 8", E8);
+        voiceCommandsMap.put("e8", E8);
+        voiceCommandsMap.put("E8", E8);
+        voiceCommandsMap.put("e oito", E8);
+
+        voiceCommandsMap.put("f 1", F1);
+        voiceCommandsMap.put("F 1", F1);
+        voiceCommandsMap.put("f1", F1);
+        voiceCommandsMap.put("F1", F1);
+        voiceCommandsMap.put("f um", F1);
+
+        voiceCommandsMap.put("f 2", F2);
+        voiceCommandsMap.put("F 2", F2);
+        voiceCommandsMap.put("f2", F2);
+        voiceCommandsMap.put("F2", F2);
+        voiceCommandsMap.put("f dois", F2);
+
+        voiceCommandsMap.put("f 3", F3);
+        voiceCommandsMap.put("F 3", F3);
+        voiceCommandsMap.put("f3", F3);
+        voiceCommandsMap.put("F3", F3);
+        voiceCommandsMap.put("f três", F3);
+
+        voiceCommandsMap.put("f 4", F4);
+        voiceCommandsMap.put("F 4", F4);
+        voiceCommandsMap.put("f4", F4);
+        voiceCommandsMap.put("F4", F4);
+        voiceCommandsMap.put("f quatro", F4);
+
+        voiceCommandsMap.put("f 5", F5);
+        voiceCommandsMap.put("F 5", F5);
+        voiceCommandsMap.put("f5", F5);
+        voiceCommandsMap.put("F5", F5);
+        voiceCommandsMap.put("f cinco", F5);
+
+        voiceCommandsMap.put("f 6", F6);
+        voiceCommandsMap.put("F 6", F6);
+        voiceCommandsMap.put("f6", F6);
+        voiceCommandsMap.put("F6", F6);
+        voiceCommandsMap.put("f seis", F6);
+
+        voiceCommandsMap.put("f 7", F7);
+        voiceCommandsMap.put("F 7", F7);
+        voiceCommandsMap.put("f7", F7);
+        voiceCommandsMap.put("F7", F7);
+        voiceCommandsMap.put("f sete", F7);
+
+        voiceCommandsMap.put("f 8", F8);
+        voiceCommandsMap.put("F 8", F8);
+        voiceCommandsMap.put("f8", F8);
+        voiceCommandsMap.put("F8", F8);
+        voiceCommandsMap.put("f oito", F8);
+
+        voiceCommandsMap.put("g 1", G1);
+        voiceCommandsMap.put("G 1", G1);
+        voiceCommandsMap.put("g1", G1);
+        voiceCommandsMap.put("G1", G1);
+        voiceCommandsMap.put("g um", G1);
+
+        voiceCommandsMap.put("g 2", G2);
+        voiceCommandsMap.put("G 2", G2);
+        voiceCommandsMap.put("g2", G2);
+        voiceCommandsMap.put("G2", G2);
+        voiceCommandsMap.put("g dois", G2);
+
+        voiceCommandsMap.put("g 3", G3);
+        voiceCommandsMap.put("G 3", G3);
+        voiceCommandsMap.put("g3", G3);
+        voiceCommandsMap.put("G3", G3);
+        voiceCommandsMap.put("g três", G3);
+
+        voiceCommandsMap.put("g 4", G4);
+        voiceCommandsMap.put("G 4", G4);
+        voiceCommandsMap.put("g4", G4);
+        voiceCommandsMap.put("G4", G4);
+        voiceCommandsMap.put("g quatro", G4);
+
+        voiceCommandsMap.put("g 5", G5);
+        voiceCommandsMap.put("G 5", G5);
+        voiceCommandsMap.put("g5", G5);
+        voiceCommandsMap.put("G5", G5);
+        voiceCommandsMap.put("g cinco", G5);
+
+        voiceCommandsMap.put("g 6", G6);
+        voiceCommandsMap.put("G 6", G6);
+        voiceCommandsMap.put("g6", G6);
+        voiceCommandsMap.put("G6", G6);
+        voiceCommandsMap.put("g seis", G6);
+
+        voiceCommandsMap.put("g 7", G7);
+        voiceCommandsMap.put("G 7", G7);
+        voiceCommandsMap.put("g7", G7);
+        voiceCommandsMap.put("G7", G7);
+        voiceCommandsMap.put("g sete", G7);
+
+        voiceCommandsMap.put("g 8", G8);
+        voiceCommandsMap.put("G 8", G8);
+        voiceCommandsMap.put("g8", G8);
+        voiceCommandsMap.put("G8", G8);
+        voiceCommandsMap.put("g oito", G8);
+
+        voiceCommandsMap.put("h 1", H1);
+        voiceCommandsMap.put("H 1", H1);
+        voiceCommandsMap.put("h1", H1);
+        voiceCommandsMap.put("H1", H1);
+        voiceCommandsMap.put("h um", H1);
+
+        voiceCommandsMap.put("h 2", H2);
+        voiceCommandsMap.put("H 2", H2);
+        voiceCommandsMap.put("h2", H2);
+        voiceCommandsMap.put("H2", H2);
+        voiceCommandsMap.put("h dois", H2);
+
+        voiceCommandsMap.put("h 3", H3);
+        voiceCommandsMap.put("H 3", H3);
+        voiceCommandsMap.put("h3", H3);
+        voiceCommandsMap.put("H3", H3);
+        voiceCommandsMap.put("h três", H3);
+
+        voiceCommandsMap.put("h 4", H4);
+        voiceCommandsMap.put("H 4", H4);
+        voiceCommandsMap.put("h4", H4);
+        voiceCommandsMap.put("H4", H4);
+        voiceCommandsMap.put("h quatro", H4);
+
+        voiceCommandsMap.put("h 5", H5);
+        voiceCommandsMap.put("H 5", H5);
+        voiceCommandsMap.put("h5", H5);
+        voiceCommandsMap.put("H5", H5);
+        voiceCommandsMap.put("h cinco", H5);
+
+        voiceCommandsMap.put("h 6", H6);
+        voiceCommandsMap.put("H 6", H6);
+        voiceCommandsMap.put("h6", H6);
+        voiceCommandsMap.put("H6", H6);
+        voiceCommandsMap.put("h seis", H6);
+
+        voiceCommandsMap.put("h 7", H7);
+        voiceCommandsMap.put("H 7", H7);
+        voiceCommandsMap.put("h7", H7);
+        voiceCommandsMap.put("H7", H7);
+        voiceCommandsMap.put("h sete", H7);
+
+        voiceCommandsMap.put("h 8", H8);
+        voiceCommandsMap.put("H 8", H8);
+        voiceCommandsMap.put("h8", H8);
+        voiceCommandsMap.put("H8", H8);
+        voiceCommandsMap.put("h oito", H8);
+
+
     }
 
 ///////////
@@ -336,7 +832,7 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         AnythingSelected = false;
         if (lastPos != null) {
             DisplayBoardBackground[lastPos.getX()][lastPos.getY()].setBackgroundResource(calculateBoardColorResource(lastPos.getX(), lastPos.getY()));
-        // usada para desmarcar a peça quando celecionada
+            // usada para desmarcar a peça quando celecionada
         }
     }
 
@@ -811,4 +1307,3 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
 
 
 }
-
