@@ -125,20 +125,8 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             public void onError(int error) {
             }
 
-//            @Override
-//            public void onResults(Bundle results) {
-//                buttonMicrofone.setImageResource(R.drawable.mic_off);
-//                ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-//                if (data != null && !data.isEmpty()) {
-//                    String spokenText = data.get(0);
-//                    // Aqui você pode processar o texto reconhecido, como verificar os comandos de voz e executar ações
-//                    Toast.makeText(GameXadrez.this, "Texto Reconhecido: " + spokenText, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-
             @Override
             public void onResults(Bundle results) {
-                buttonMicrofone.setImageResource(R.drawable.mic_off);
                 ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (data != null && !data.isEmpty()) {
                     String spokenText = data.get(0).toLowerCase();
@@ -149,13 +137,13 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                     if (buttonToClick != null) {
                         // Clique no botão associado ao comando de voz
                         buttonToClick.performClick();
-
                     } else {
                         // Comando de voz não reconhecido
                         Toast.makeText(GameXadrez.this, "Comando de voz não reconhecido", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
+
             @Override
             public void onPartialResults(Bundle partialResults) {
             }
@@ -165,33 +153,42 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             }
         });
 
+        final Handler handler = new Handler();
+        final int delay = 2000;
+
+        Runnable runnable = new Runnable() {
+            public void run() {
+                // esse inicia o reconhecimento de voz automaticamente a cada 2 segundos
+                if (ContextCompat.checkSelfPermission(GameXadrez.this, Manifest.permission.RECORD_AUDIO)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    checkPermissions();
+                } else {
+                    speechRecognizer.startListening(speechRecognizerIntent);
+                }
+                handler.postDelayed(this, delay);
+            }
+        };
+
+        // essa parte vai inicia a repetição a cada 2 segundos
+        handler.postDelayed(runnable, delay);
+
         buttonMicrofone.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     speechRecognizer.stopListening();
-
-                }
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    buttonMicrofone.setImageResource(R.drawable.mic_on);
-                    if (ContextCompat.checkSelfPermission(GameXadrez.this, Manifest.permission.RECORD_AUDIO)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        checkPermissions();
-                    } else {
-                        speechRecognizer.startListening(speechRecognizerIntent);
-                    }
                 }
                 return false;
             }
         });
-
     }
+
     private void calculateCellSize() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         int screenWidth = displayMetrics.widthPixels;
-        int numColumns = 8; // Número de colunas do tabuleiro
+        int numColumns = 8; // esse é o número de colunas do tabuleiro
 
         int cellSize = screenWidth / numColumns;
 
@@ -222,7 +219,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             params.height = cellSize;
             cell.setLayoutParams(params);
         }
-
     }
 
     private void checkPermissions() {
@@ -326,7 +322,7 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         Board[7][0].setPiece(bRook2);
         Board[7][1].setPiece(bPawn8);
 
-        int boardSize = 8; // Tamanho do tabuleiro
+        int boardSize = 8;
 
         DisplayBoard = new TextView[boardSize][boardSize];
         DisplayBoardBackground = new TextView[boardSize][boardSize];
@@ -1148,7 +1144,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
                 //       isKingInDanger();
                 return;
             } else if (clickedPiece.isWhite() != FirstPlayerTurn) {
-                //      isKingInDanger();
                 return;
             } else {
                 listOfCoordinates.clear();
