@@ -39,10 +39,7 @@ import com.example.trabalhojogo.Pieces.Piece;
 import com.example.trabalhojogo.Pieces.Queen;
 import com.example.trabalhojogo.Pieces.Rook;
 
-
-
 public class GameXadrez extends AppCompatActivity implements View.OnClickListener {
-
     public Boolean FirstPlayerTurn;
     public ArrayList<Coordinates> listOfCoordinates = new ArrayList<>();
     public Position[][] Board = new Position[8][8];
@@ -54,17 +51,13 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
     public TextView[][] DisplayBoard = new TextView[8][8];
     public TextView[][] DisplayBoardBackground = new TextView[8][8];
     public ArrayList<Position[][]> LastMoves = new ArrayList<>();
-
     public LinearLayout pawn_choices;
     public int numberOfMoves;
-
     private SpeechRecognizer speechRecognizer;
     private EditText editText;
     private ImageView buttonMicrofone;
     private static final int RecordAudioRequestCode = 1;
-
     private HashMap<String, View> voiceCommandsMap = new HashMap<>();
-
     Piece bKing,bQueen,bKnight1,bKnight2,bRook1,bRook2,bBishop1,bBishop2,bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8;
     Piece wKing,wQueen,wKnight1,wKnight2,wRook1,wRook2,wBishop1,wBishop2,wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8;
 
@@ -77,7 +70,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         calculateCellSize();
 
         Button btnReset = findViewById(R.id.btnReset);
-
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,7 +181,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
 
         int screenWidth = displayMetrics.widthPixels;
         int numColumns = 8; // esse é o número de colunas do tabuleiro
-
         int cellSize = screenWidth / numColumns;
 
         GridLayout gridLayout2 = findViewById(R.id.gridLayout2);
@@ -353,7 +344,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         setBoard();
         deselectPiece();
 
-
         ////////////////////////////////////////////////////// click por voz
 
         Button btn1 = findViewById(R.id.btnReset);
@@ -428,7 +418,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         TextView H6 = findViewById(R.id.R72);
         TextView H7 = findViewById(R.id.R71);
         TextView H8 = findViewById(R.id.R70);
-
 
         voiceCommandsMap.put("resetar", btn1);
         voiceCommandsMap.put("clique no botão a", btn1);
@@ -818,8 +807,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         voiceCommandsMap.put("h8", H8);
         voiceCommandsMap.put("H8", H8);
         voiceCommandsMap.put("h oito", H8);
-
-
     }
 
 ///////////
@@ -1257,7 +1244,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-
     private boolean moveIsAllowed(ArrayList<Coordinates> piece, Coordinates coordinate) {
         for (Coordinates c : piece) {
             if (c.getX() == coordinate.getX() && c.getY() == coordinate.getY()) {
@@ -1271,7 +1257,6 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
         int boardColorResource = (lastPos.getX() + lastPos.getY()) % 2 == 0 ? R.color.colorBoardDark : R.color.colorBoardLight;
         DisplayBoardBackground[lastPos.getX()][lastPos.getY()].setBackgroundResource(boardColorResource);
     }
-
 
     private void isKingInDanger() {
         for (int i = 0; i < 8; i++) {
@@ -1299,6 +1284,4 @@ public class GameXadrez extends AppCompatActivity implements View.OnClickListene
             DisplayBoardBackground[kingPosition.getX()][kingPosition.getY()].setBackgroundResource(kingColorResource);
         }
     }
-
-
 }
