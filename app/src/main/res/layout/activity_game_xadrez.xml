@@ -6,7 +6,6 @@
     android:background="@drawable/papeltabuleiro"
     tools:context=".GameXadrez">
 
-
     <GridLayout
         android:id="@+id/gridLayout2"
         android:layout_width="wrap_content"
@@ -1026,7 +1025,6 @@
             android:onClick="onClick" />
     </GridLayout>
 
-
     <Button
         android:id="@+id/btnReset"
         android:layout_width="wrap_content"
@@ -1047,7 +1045,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <EditText
             android:id="@+id/textofalado"
             android:layout_width="match_parent"
@@ -1062,7 +1059,6 @@
             android:layout_height="36dp"
             android:src="@drawable/mic_off"
             />
-
 
     </LinearLayout>
 
@@ -1139,6 +1135,5 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="#ffff" />
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
