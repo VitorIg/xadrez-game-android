@@ -15,8 +15,6 @@ public class HomeXadrez extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_xadrez);
-
-
         buttonGameXadrez = findViewById(R.id.button_jogar);
         buttonGameXadrez.setOnClickListener(view -> {
             startActivity(new Intent(this, GameXadrez.class));
